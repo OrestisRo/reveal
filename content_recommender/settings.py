@@ -21,7 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'gk^9!k^b!cj7q0nl3kv$11m)vn=4y+95(30y^6l5^l(-dnax^('
-
+SESSION_ENGINE = 'django_mongoengine.sessions'
+SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -35,9 +36,9 @@ FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/recommendsys'
 FACEBOOK_CANVAS_URL = 'https://social-recommendation.ics.forth.gr/social_recommendation/'
 # Application definition
 
-# AUTHENTICATION_BACKENDS = (
-#     'social_auth.backends.facebook.FacebookBackend',
-# )
+AUTHENTICATION_BACKENDS = (
+    'django_mongoengine.auth.backends.MongoEngineBackend',
+)
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,8 +46,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djangotoolbox',
-    'django_facebook',
+    # 'djangotoolbox',
+    # 'django_facebook',
     'recommender'
 )
 
@@ -59,29 +60,38 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'recommendation_app.urls'
+ROOT_URLCONF = 'content_recommender.urls'
+DJANGO_MONGOENGINE_OVERRIDE_ADMIN = True
+# WSGI_APPLICATION = 'content_recommender.wsgi.application'
 
-WSGI_APPLICATION = 'recommendation_app.wsgi.application'
 
-
+MONGODB_DATABASES = {
+    "default": {
+        "name": 'recommender',
+        # "host": database_host,
+        # "password": database_password,
+        # "username": database_user,
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
-    'default': {
-        'ENGINE': 'django_mongodb_engine',
-        'NAME': 'django-recommendation',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+    'default':
+    {
+        'ENGINE':'' 
+        # 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django_mongodb_engine',
+    #     'NAME': 'django-recommendation',
+    #     'USER': '',
+    #     'PASSWORD': '',
+    #     'HOST': '',
+    #     'PORT': '',
+    # }
 }
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -102,4 +112,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/db/recommendation_app/recommendation_app/static/'
+STATIC_ROOT = 'content_recommender/recommender/static/'
