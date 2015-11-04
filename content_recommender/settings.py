@@ -15,30 +15,31 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+from mongoengine import *
+connect('rec_test')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'gk^9!k^b!cj7q0nl3kv$11m)vn=4y+95(30y^6l5^l(-dnax^('
-SESSION_ENGINE = 'django_mongoengine.sessions'
-SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
+# SESSION_ENGINE = 'django_mongoengine.sessions'
+# SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-FACEBOOK_APP_ID='236883073170435'
-FACEBOOK_APP_SECRET='0ee7bfa0e9f036598e38d9b30a1c0f8f'
-FACEBOOK_APPLICATION_NAMESPACE = 'recommendsys'
-FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/recommendsys'
-FACEBOOK_CANVAS_URL = 'https://social-recommendation.ics.forth.gr/social_recommendation/'
+# FACEBOOK_APP_ID='236883073170435'
+# FACEBOOK_APP_SECRET='0ee7bfa0e9f036598e38d9b30a1c0f8f'
+# FACEBOOK_APPLICATION_NAMESPACE = 'recommendsys'
+# FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/recommendsys'
+# FACEBOOK_CANVAS_URL = 'https://social-recommendation.ics.forth.gr/social_recommendation/'
 # Application definition
 
-AUTHENTICATION_BACKENDS = (
-    'django_mongoengine.auth.backends.MongoEngineBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'django_mongoengine.auth.backends.MongoEngineBackend',
+# )
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,8 +47,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'djangotoolbox',
-    # 'django_facebook',
     'recommender'
 )
 
@@ -61,25 +60,16 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'content_recommender.urls'
-DJANGO_MONGOENGINE_OVERRIDE_ADMIN = True
 # WSGI_APPLICATION = 'content_recommender.wsgi.application'
 
 
-MONGODB_DATABASES = {
-    "default": {
-        "name": 'recommender',
-        # "host": database_host,
-        # "password": database_password,
-        # "username": database_user,
-    },
-}
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
     'default':
     {
-        'ENGINE':'' 
+        'ENGINE':''
         # 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }

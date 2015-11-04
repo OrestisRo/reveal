@@ -1,6 +1,5 @@
 from django.db import models
 from mongoengine import *
-# register_connection('connection','recommender')
 # Create your models here.
 class User(Document):
     name =   StringField(max_length=255)
