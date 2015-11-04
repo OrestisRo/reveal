@@ -1,0 +1,379 @@
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+/*-moz-border-radius: ;
+-khtml-border-radius: ; TODO border radius supported for all browsers.*/
+
+a:link {color: black; text-decoration: none;}
+a:visited {color: black; text-decoration: none;}
+a:hover {text-decoration: none;}
+a:active {text-decoration: none;}
+
+input[type="number"]{
+	width: 40px;
+	text-align: right;
+}
+input.number {
+	text-align: right;
+}
+/*Divs ID formats.*/
+.body{
+	background-color: #E5E5E5;
+}
+
+.progress{
+	position: relative;
+	width: 200px;
+	margin-top: 15px;
+	margin-left: 43%;
+}
+#navi {
+	position: fixed;
+	top: 50px;
+	width: 160px;
+	height: 120px;
+	float: left;
+}
+#recap_navi{
+	position: fixed;
+	top: 50px;
+	width: 160px;
+	height: 120px;
+	float: right;
+}
+#app_box{
+	width: 814px;
+	min-height: 650px;
+	position: relative;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+/*divs CLASSES formats.*/
+.navibuttons{
+	font-family:Arial, Helvetica, sans-serif;
+	width:100%;
+	margin-top: 10px;
+	position: relative;
+	text-align: center;
+	line-height: 40px;
+	height: 40px;
+	color: white;
+	background-color: #3A579A;
+	border-radius: 1em;
+	box-shadow: 0px 3px 3px #888888;
+}
+.recap_button{
+	font-family:Arial, Helvetica, sans-serif;
+	width:100%;
+	margin-top: 10px;
+	position: relative;
+	text-align: center;
+	line-height: 40px;
+	height: 40px;
+	color: white;
+	background-color: #3A579A;
+	border-radius: 1em;
+	box-shadow: 0px 3px 3px #888888;
+}
+/*Div CLASSES formats.*/
+div.option_wrapper{
+	position:fixed;
+	top:40%;
+	left:45%;
+	margin:-100px 0 0 -100px;
+	width:300px;
+	height:200px;
+}
+div.option{
+	font-family:Arial, Helvetica, sans-serif;
+	margin: 20px;
+	display: block;
+	text-align: center;
+	line-height: 80px;
+	background-color: #3A579A;
+	color: white;
+	border-radius: 2em;
+	box-shadow: 0px 2px 2px #888888;
+}
+div.option :hover{
+	cursor: pointer;
+	cursor: hand;
+}
+
+div.header_space{
+	width: 604px;
+	height: 50px;
+}
+div.sim_msg{
+	display: inline-block;
+	width: 404px;
+	text-align: center;
+	line-height: 25px;
+}
+div.label{
+	display: inline-block;
+	width: 56px;
+	float:right;
+	margin-right: 7px;
+	line-height: 50px;
+}
+div.friends_list{
+	left: 0%;
+	margin: auto;
+	overflow: hidden;
+	background-color: #E5E5E5;
+	position: relative;
+	height: 100%;
+	width: 604px;
+}
+
+div.wait{
+	left: 0%;
+	margin: auto;
+	overflow: hidden;
+	background-color: #E5E5E5;
+	position: relative;
+	height: 100%;
+	width: 604px;
+}
+
+div.friend{
+	background-color: #FFFFFF;
+	float: left;
+	height: 50px;
+	width: 404px;
+	text-align: center;
+	line-height: 50px;
+	overflow: hidden;
+	box-shadow: 0px 2px 2px #888888;
+	margin-top: 8px;
+	margin-bottom: 2px;
+}
+
+div.score{
+	float: right;
+	display: inline-block;
+	height: 50px;
+	width: 87px;
+	line-height: 50px;
+	text-align: center;
+
+	margin-top: 8px;
+	margin-bottom: 2px;
+}
+div.content{
+	display: inline-block;
+	float: right;
+	overflow: hidden;
+	background-color: #E5E5E5;
+	position: relative;
+	height: 100%;
+	width: 644px;
+	padding: 0;
+	margin: 0;
+}
+div.list_item{
+	overflow:hidden;
+	background-color: #FFFFFF;
+	position: relative;
+	height: 260px;
+	width: 600px;
+	margin-left: 18px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	box-shadow: 0px 3px 3px #888888;
+}
+div.user_info{
+	width: 600px;
+	height: 49px;
+	border-bottom: solid 2px #E5E5E5;
+} 
+div.fb_image{
+	overflow: hidden;
+	display: inline-block;
+	position: relative;
+	float: left;
+	height: 50px;
+	width: 50px;
+	margin-right: 3px;
+	margin-left: 1px;
+}
+div.date{
+	display: inline-block;
+	line-height: 50px;
+	font-size: 13px;
+	height: 50px;
+	margin-right: 5px;
+	float: right;
+	position: relative;
+}
+div.popup{
+	overflow: hidden;
+	display: inline-block;
+	height: 50px;
+	float: right;
+	position: relative;
+	width: 50px;
+}
+div.rate{
+	overflow: hidden;
+	display: block;
+	height: 26px;
+	position: relative;
+	float: left;
+	width: 644px;
+	/*border: 1px solid;*/
+	border-color: #E7E7ED;
+	margin-top: 1px;
+}
+div.plus_button{
+	text-align: center;
+	line-height: 22px;
+	color: #E7E7ED;
+	display: inline-block;
+	font-size: 20px;
+	height: 23.5px;
+	float: left;
+	position: relative;
+	width: 298px;
+	border-color: #E7E7ED;
+	border-right: 1px solid;
+	padding: 1px;
+	padding-right: 0px;
+}
+div.minus_button{
+	text-align: center;
+	line-height: 22px;
+	color: #E7E7ED;
+	display: inline-block;
+	font-size: 20px;
+	height: 23.5px;
+	float: left;
+	position: relative;
+	width: 298px;
+	border-color: #E7E7ED;
+	margin: 1px;
+}
+div.plus_button:hover{
+	padding: 0px;
+	color: #3A579A;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #3A579A;
+}
+div.minus_button:hover{
+	margin: 0px;
+/* 	color: #3A579A; */
+color:red;
+	cursor: pointer;
+	cursor: hand;
+/* 	border: 1px solid #3A579A; */
+border: 1px solid red;
+}
+div.video_area{
+	overflow: hidden;
+	border-bottom: solid 1px #E7E7ED;
+	height: 180px;
+	width: 100%;
+}
+div.video_info{
+	padding: 10px;
+	float: right;
+	width: 280px;
+	height: 180px;
+}
+div.yt_title{
+	font-size: 100%;
+}
+div.yt_about{
+	padding-top: 10px;
+	font-size: 75%;
+	height: 120px;
+}
+div.yt_stamp{
+	position: absolute;
+	text-align: center;
+	color: #D1D1D6;
+	margin-bottom: 0px;
+	right: 20%;
+	font-size: 12px;
+	font-family:"Times New Roman",Times,serif;
+}
+div.yt_player{
+	overflow: hidden;
+	float: left;
+	margin: 0px;
+	width: 299px;
+	height: 100%;
+}
+
+div.time{
+	background-color: #E5E5E5;
+	line-height: 22px;
+	text-align: center;
+	width: 150px;
+	overflow: hidden;
+	margin-left: 5px;
+}
+div.time:hover{
+	background-color: #DDDEE0;
+	cursor: pointer;
+	cursor: hand;
+}
+div.time_options{
+	background-color: #E5E5E5;
+	height: 58px;
+	width: 150px;
+	text-align: center;
+}
+div.t_opt:hover{
+	background-color: #DDDEE0;
+	cursor: pointer;
+	cursor: hand;
+}
+
+div.load_msg{
+	text-align: center;
+	line-height: 40px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+/*Images CLASSES formats.*/
+img.clock{
+	height:20px;
+	width:20px;
+	float: left;
+	padding-top: 1.3px;
+	padding-left: 5px;
+	border-radius: 3em;
+}
+img.arrow{
+	float: right;
+	height: 11px;
+	width: 11px;
+	padding-top: 5px;
+	margin-right: 10px;
+	border-left: 1px solid #E5E5E5;
+}
+img.profile{
+	height: 50px;
+	width: 50px;
+}
+img.popup{
+	height: 17px;
+	width: 17px;
+	margin-top: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	cursor: hand;
+}
+span.rated{
+	display: hidden;
+}
