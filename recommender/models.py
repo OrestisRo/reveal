@@ -3,7 +3,7 @@ from mongoengine import *
 # Create your models here.
 class User(Document):
     name =   StringField(max_length=255)
-    id =   StringField(max_length=255,primary_key=True)
+    fid =   StringField(max_length=255)
     token =   StringField(max_length=255)
     total_weight =  FloatField()
     movie_categories = ListField()

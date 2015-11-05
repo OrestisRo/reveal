@@ -30,9 +30,9 @@ class index(View):
 
 #Trivial function for exchanging facebook code fragment for access token
 class handle_token(View):
-        db = MongoClient('127.0.0.1').recommendation_db
-        users_collection = db.users
-        friends_collection = db.friends
+        # db = MongoClient('127.0.0.1').recommendation_db
+        # users_collection = db.users
+        # friends_collection = db.friends
         app_id = '236883073170435'
     	secret = '0ee7bfa0e9f036598e38d9b30a1c0f8f'
 
@@ -40,16 +40,17 @@ class handle_token(View):
     	code = request.REQUEST['code']
         token = self.ask_token(code)
         uid = self.getUserId(token)
-    	query = self.users_collection.find_one({'id':uid},{'id':'true','_id':False})
-
+    	# query = self.users_collection.find_one({'id':uid},{'id':'true','_id':False})
+        query = User.objects(fid=uid).only('fid').first()
         if query: # Check if user exists
     		request.session['id'] = query['id']
     		return render(request,'pages/index.html',query)
 
     	uid = self.overlaps(token,uid)
     	request.session['id'] = uid #save session
-    	query = self.users_collection.find_one({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
-    	user_info = query
+    	query = User.objects(fid=uid).exclude('music_genres','movie_genres','music_categories','movie_categories')
+        # ({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
+    	user_info = query.to_json()
 
     	template = loader.get_template('pages/recap.html')
     	context = RequestContext(request,{"user_info":user_info})
@@ -82,15 +83,18 @@ class handle_token(View):
     def overlaps(self,token,uid):
 		user_movie_gens = {}
 		user_music_gens = {}
-		user = self.friends_collection.find_one({'id':uid}) #Search for new user, in friends of old users
+		user = Friend.objects(fid=uid).first()#find_one({'id':uid}) #Search for new user, in friends of old users
 		if not user:
-			user_movie_gens, user_music_gens,user_movie_cat,user_music_cat = fb_info.createProfile()
+			user_movie_gens, user_music_gens,user_movie_cat,user_music_cat = fb_info.createProfile(token)
 		else:
+            user = User()
 			user['token'] = access_token
 			user['has_lists'] = 0
 			user['proc_posts'] = []
 			user['time'] = 0
-			self.users_collection.insert(user)
+            user.save()
+			# self.users_collection.insert(user)
+
 		uid=fb_info.calcOverlap(user['movie_genres'],user['music_genres'],user['movie_categories'],user['music_categories'],token)
 		return uid
 
@@ -99,13 +103,14 @@ class display_index(View):
     	return render(request,'pages/index.html')
 
 class display_index_init(display_index):
-    db = MongoClient('127.0.0.1').recommendation_db
-    users_collection = db.users
+    # db = MongoClient('127.0.0.1').recommendation_db
+    # users_collection = db.users
     list_flag = 0
 
     def get(self,request):
     	uid = '520078670'
-    	user_info = self.users_collection.find_one({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
+    	user_info = User.objects(fid=uid).exclude('music_genres','movie_genres','music_categories','movie_categories')
+        # self.users_collection.find_one({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
     	form = request.POST
     	self.list_flag = user_info['has_lists']
         self.update_scores(uid,user_info['scores'],form)
@@ -121,19 +126,24 @@ class display_index_init(display_index):
     		new_movie = new_form.get('music_'+cur_id)
     		new_music = new_form.get('movie_'+cur_id)
     		if new_movie is not None:
-    			self.users_collection.update({'id':uid,'scores.facebook_id':cur_id},{'$set':{'scores.$.movie_score.movie_friend_score':new_movie}})
+                User.objects.filter(                Q(fid=uid)&Q(scores__facebook_id=cur_id)).update(**{'set__scores__$__movie_score__movie_friend_score':new_movie}
+                )
+    			# self.users_collection.update({'id':uid,'scores.facebook_id':cur_id},{'$set':{'scores.$.movie_score.movie_friend_score':new_movie}})
     		if new_music is not None:
-    			self.users_collection.update({'id':uid,'scores.facebook_id':cur_id},{'$set':{'scores.$.music_score.music_friend_score':new_music}})
+    			User.objects.filter(                Q(fid=uid)&Q(scores__facebook_id=cur_id)).update(**{'set__scores__$__music_score__music_friend_score':new_music}
+                )
+                # self.users_collection.update({'id':uid,'scores.facebook_id':cur_id},{'$set':{'scores.$.music_score.music_friend_score':new_music}})
 
 class display_movies(Views):
     time_window = 2
     time = 0
     db = MongoClient('127.0.0.1').recommendation_db
     users_collection = db.users
-    
+
     def get(self,request):
     	uid = '520078670'
-    	movies = self.users_collection.find_one({'id':uid},{'movies10':'true','_id':False})['movies10']
+        movies = User.objects(fid=uid).only('movies10')['movies10']
+    	# movies = self.users_collection.find_one({'id':uid},{'movies10':'true','_id':False})['movies10']
     	ex = str(datetime.now() - timedelta(days=self.time_window))[:10]
 
     	movies10 = filter(lambda x:x['created'] > ex,movies)
@@ -145,7 +155,8 @@ class display_movies(Views):
     	return render(request,'pages/fb_movies.html',{'movies':movies10,'time':self.time})
 
     def get_movie(self,uid):
-    	movie_genres = self.users_collection.find_one({'id':uid},{'movie_genres':'true','_id':False})['movie_genres']
+        movie_genres = User.objects(fid=uid).only('movie_genres')['movie_genres']
+    	# movie_genres = self.users_collection.find_one({'id':uid},{'movie_genres':'true','_id':False})['movie_genres']
     	score1 = {}
         score2 = {}
     	movies10 = []
@@ -184,7 +195,9 @@ class display_music(Views):
     users_collection = db.users
 
     def get(self,request):
-    	music = self.users_collection.find_one({'id':uid},{'music10':'true','_id':False})['music10']
+        uid = '520078670'
+    	# music = self.users_collection.find_one({'id':uid},{'music10':'true','_id':False})['music10']
+        music = User.objects(fid=uid).only('music10')['music10']
     	ex = str(datetime.now() - timedelta(days=self.time_window))[:10]
     	music10 = filter(lambda x:x['created'] > ex,music)
     	music10 = sorted(music10, key=lambda k:k['score'])[::-1]
@@ -197,7 +210,8 @@ class display_music(Views):
     	return HttpResponse(template.render(context))
 
     def get_music(uid):
-        music_genres = self.users_collection.find_one({'id':uid},{'music_genres':'true','_id':False})['music_genres']
+        music_genres = User.objects(fid=uid).only('music_genres')['music_genres']
+        # music_genres = self.users_collection.find_one({'id':uid},{'music_genres':'true','_id':False})['music_genres']
     	score1 = {}
         score2 = {}
     	music10 = []
@@ -234,8 +248,9 @@ class display_scores(Views):
 
     def get(self,request):
     	uid = '520078670'
-    	query = self.users_collection.find_one({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
-    	user_info = query
+        query = User.objects(fid=uid).exclude('music_genres','music_categories','movie_genres','movie_categories')
+    	# query = self.users_collection.find_one({"id":uid},{'music_genres':False,'movie_genres':False,'music_categories':False,'movie_categories':False,'_id':False,'token':False})
+    	user_info = query.to_json()
     	template = loader.get_template('pages/recap.html')
     	context = RequestContext(request,{"user_info":user_info})
     	return HttpResponse(template.render(context))
@@ -254,13 +269,19 @@ class rate(Views):
     	for genre in json.loads(genres):
     		try:
     			if typ == 'music':
-    				self.users_collection.update({'id':uid,'music10.post_id':pid},{"$set":{'music10.$.rated':rating}})
-    				whole = 'music_genres.{0}'.format(genre)
-    				self.users_collection.update({'id':uid},{"$inc":{whole:boost}})
+                    User.objects.filter(Q(fid=uid) & Q(music10__post_id=pid)).update(**{'set__music10__$__rated':rating})
+    				# self.users_collection.update({'id':uid,'music10.post_id':pid},{"$set":{'music10.$.rated':rating}})
+    				whole = 'inc__music_genres__{0}'.format(genre)
+                    User.objects(fid=uid).update(**{whole:boost})
+                    # whole = 'music_genres.{0}'.format(genre)
+    				# self.users_collection.update({'id':uid},{"$inc":{whole:boost}})
     			elif typ == 'movie':
-    				self.users_collection.update({'id':uid,'movies10.post_id':pid},{"$set":{'movies10.$.rated':rating}})
-    				whole = 'movie_genres.{0}'.format(genre)
-    				self.users_collection.update({'id':uid},{"$inc":{whole:boost}})
+                    User.objects.filter(Q(fid=uid) & Q(movies10__post_id=pid)).update(**{'set__movies10__$__rated':rating})
+    				# self.users_collection.update({'id':uid,'movies10.post_id':pid},{"$set":{'movies10.$.rated':rating}})
+                    whole = 'inc__movie_genres__{0}'.format(genre)
+                    User.objects(fid=uid).update(**{whole:boost})
+    				# whole = 'movie_genres.{0}'.format(genre)
+    				# self.users_collection.update({'id':uid},{"$inc":{whole:boost}})
     		except Exception as e:
     			print(e)
     	return HttpResponse('OK')

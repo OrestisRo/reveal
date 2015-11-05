@@ -123,7 +123,7 @@ def processHistoryLink(history_posts,user):
 
 	return user,history_movie_entities,history_music_entities
 
-def createProfile():
+def createProfile(token):
 	db_client = MongoClient('127.0.0.1')
 	recomm = db_client.recommendation_db
 	ins = recomm.users
