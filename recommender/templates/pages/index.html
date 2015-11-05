@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+{%load staticfiles%}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fb_rec.css">
+<script>
+</script>
+</head>
+<body bgcolor="#E5E5E5">
+	<div class="option_wrapper">
+		<a href="{%url 'display_music'%}"><div class="option" id="music"><b>Music</b></div></a>
+		<a href="{%url 'display_movies'%}"><div class="option" id="movies"><b>Movies</b></div></a>
+		<a href="{%url 'display_scores'%}"><div class="option" id="friend_scores"><b>Adjust your friends' scores</b></div></a>
+	</div>
+</html>

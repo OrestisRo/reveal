@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+{%load staticfiles%}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fb_rec.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+$(document).ready(function(){
+	$(".wait").hide();
+	var percent = 0;
+	if (percent>0){
+		$('.load').val(percent);
+	}
+});
+</script>
+</head>
+<body bgcolor="#E5E5E5">
+
+<!--<div id="recap_navi">
+<a href="#jump"><div class="recap_button">Get me to the end!</div></a>
+</div>-->
+<!--<a href="#jump2"><div class="option" style="float:right;border-radius:0.2em;width:200px;margin-right:10%;">Get me to the end!</div></a>-->
+
+<div class="friends_list">
+	<form action="{%url 'display_index_init'%}" id="score_form" method="POST"> <!--TODO-->
+	<div class="header_space"><div class="sim_msg"><b>{{user_info.name}}</b><br>Similarity with your friends.</div><div class="label">Film</div><div class="label" style="margin-right:35px">Music</div></div>
+	{%for friend in user_info.scores%}
+	{%if friend.music_score.music_friend_score or friend.movie_score.movie_friend_score%}
+	<div class="friend"><div class="fb_image"><a href="http://www.facebook.com/{{friend.facebook_id}}" target="_blank">
+		<img class="profile" src="{{friend.picture}}"/></div>
+		<font face="lucida" color="#3A579A"><b>{{friend.friend_name}}</b></font></a>
+	</div>
+	<div class="score"><input id="movie_{{friend.facebook_id}}" name="movie_{{friend.facebook_id}}" type="number" size="5" min=0 max=100 step=0.5 value="{{friend.movie_score.movie_friend_score}}"></input>%</div>
+	<div class="score"><input id="music_{{friend.facebook_id}}" name="music_{{friend.facebook_id}}" type="number" size="3" min=0 max=100 step=0.5 value="{{friend.music_score.music_friend_score}}"></input>%</div>
+	{%endif%}
+	{%endfor%}
+	</form>
+</div>
+<a href="#jump"><div id="sub" class="option" style="width:200px; height:80px; margin-left:42%; margin-bottom:10%">Proceed</div></a>
+<div class="wait">
+	<div class="load_msg">
+		We are creating lists with the recommended posts for you.
+		<br>The lists are based on the similarity score with your friends.
+		<br>This might take a while, based on ammount of interests you have expressed on facebook.
+		<br>Please wait...
+	</div>
+	<progress class="load" max="100" style="width:200px; margin-left: 33%; margin-top: 8%;"></progress>  <!--margin-top:15px; margin-left:43%-->
+</div>
+<a name="jump">
+<script>
+	var sub = document.getElementById('sub');
+	sub.style.cursor = 'pointer';
+	sub.onclick = function() {
+		document.forms["score_form"].submit();
+		$("#sub").hide();
+		$(".wait").show();
+	};
+</script>
+
+</body>
+</html>

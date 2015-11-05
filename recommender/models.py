@@ -12,6 +12,8 @@ class User(Document):
     music_categories = ListField()
     music_genres = DictField()
     music_scores =  FloatField()
+    music10 = ListField()
+    movies10 = ListField()
 
 class Friend(Document):
     name =   StringField(max_length=255)

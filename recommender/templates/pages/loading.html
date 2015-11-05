@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+{%load staticfiles%}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fb_rec.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+$(document).ready(function(){
+// 	var percent = "{{user_info.progress}}"
+	var percent = 0;
+	if (percent>0){
+		$('.load').val(percent);
+	}
+});
+</script>
+</head>
+<body bgcolor="#E5E5E5">
+	<div class="load_msg">
+		We are calculating the similarity score between your friends and you.
+		<br>This might take a while, based on ammount of interests you have expressed on facebook.
+		<br>Please wait...
+	</div>
+	<progress class="load" max="100"></progress>
+</div>
+</body>

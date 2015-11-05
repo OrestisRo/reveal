@@ -1,10 +1,10 @@
 import requests,re
 from pprint import pprint
 import json
-import urlparse
+import urllib.parse
 from pymongo import MongoClient
 import Levenshtein as lev
-from langid import classify
+
 
 #Given a youtube's video ID or a whole youtube url, return the possible entity from inside the title OR None.
 def getEntity(vid,titled):
@@ -73,9 +73,9 @@ def checkViews(results):
 		response = requests.get(url).json()
 		if ('items' in response) and response['items'] != []:
 			statistics = response['items'][0]['statistics']
-			if statistics['viewCount'] > maxViews:
+			if int(statistics['viewCount']) > maxViews:
 				best = video
-				maxViews = statistics['viewCount']
+				maxViews = int(statistics['viewCount'])
 	if best:
 		return best['title'], best['embed'], best['description']
 	else:
@@ -85,7 +85,7 @@ def checkViews(results):
 def getVideo(entity):
 	search_term,embed,title,description = None,None,None,None
 	results = []
-	if not isinstance(entity, basestring):
+	if not isinstance(entity, str):
 		pass
 	else:
 		search_term = entity
@@ -104,17 +104,17 @@ def getVideo(entity):
 			try:
 				test = requests.get(url).json()
 			except ConnectionError:
-				print "Connection Error in getVideo."
+				print ("Connection Error in getVideo.")
 			if 'items' in test:
 				if test['items']:
 					item = test['items'][0]
 					buff = {}
-					try:
-						lang = classify(item['snippet']['title'])
-						if lang[0]!='en':
-							continue
-					except e:
-						print e
+					# try:
+					lang = item['snippet']['title']
+						# if lang[0]!='en':
+							# continue
+					# except e:
+						# print (e)
 					embed = 'https://www.youtube.com/embed/{0}'.format(item['id']['videoId'])
 					title = item['snippet']['title']
 					description = item['snippet']['description']

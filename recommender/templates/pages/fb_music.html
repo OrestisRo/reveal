@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recommended Music Related</title>
+{%load staticfiles%}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fb_rec.css">
+
+<script type="text/javascript" src="{{STATIC_URL}}/assets/jquery-latest.min.js"></script>
+<script>
+$(document).ready(function(){
+// 	$("div.time_options").hide();
+	$("div.time").click(function(){
+		$("div.time_options").slideToggle("slow");
+	});
+	var time_sel = $("#time").attr('value');
+
+	if (time_sel == 0) {
+		document.getElementById("day").innerHTML = "<b>&bull; Last 2 Days &bull;</b>";
+	}
+	else if (time_sel == 1) {
+		document.getElementById("week").innerHTML = "<b>&bull; Last Week &bull;</b>";
+	}
+	else if (time_sel == 2){
+		document.getElementById("month").innerHTML = "<b>&bull; Last 2 Weeks &bull;</b>";
+	}
+});
+$(document).ready(function(){
+	$("div.plus_button").click(function(){
+		var current = $(this).siblings().eq(1).text();
+		console.log(current);
+		var genres = $(this).parents().siblings(".genres");
+		var glen = genres.find('span').length;
+		var tojson = new Array(glen);
+		var id = genres.find('span').eq(glen-1).text()
+		for (i=0;i<glen-1;i++){
+			tojson[i] = genres.find('span').eq(i).text()
+		}
+		if (current=="1"){
+			$(this).siblings().eq(1).html("0");
+			$(this).css({"color": "#E7E7ED","border-color": "#E7E7ED"});
+			$.ajax({
+				url: '/social_recommendation/reset_plus/',
+				type: 'GET',
+				dataType:'json',
+				contentType: "application/json",
+				data:{genres:JSON.stringify(tojson),rated:1,type:'music',id:id},
+				success: function(data) {
+				   console.log('success')
+				},
+				failure: function(data) {
+					console.log('Got an error dude');
+				}
+			});
+		}
+		else{
+			$(this).siblings().eq(1).html("1");
+			$(this).css({"color":"#3A579A","border": "1px solid #3A579A"});
+			$(this).siblings().eq(0).css({"color": "#E7E7ED","border-color": "#E7E7ED"});
+			$.ajax({
+				url: '/social_recommendation/plus_rated/',
+				type: 'GET',
+				dataType:'json',
+				contentType: "application/json",
+				data:{genres:JSON.stringify(tojson),rated:1,type:'music',id:id},
+				success: function(data) {
+				   console.log('success')
+				},
+				failure: function(data) {
+					console.log('Got an error dude');
+				}
+			});
+		}
+	});
+});
+
+$(document).ready(function(){
+	$("div.minus_button").click(function(){
+		var current = $(this).siblings().eq(1).text();
+		console.log(current);
+		var genres = $(this).parents().siblings(".genres");
+		var glen = genres.find('span').length;
+		var tojson = new Array(glen);
+		var id = genres.find('span').eq(glen-1).text()
+		for (i=0;i<glen-1;i++){
+			tojson[i] = genres.find('span').eq(i).text()
+		}
+		if (current=="-1"){
+			$(this).siblings().eq(1).html("0");
+			$(this).css({"color": "#E7E7ED","border-color": "#E7E7ED"});
+			$.ajax({
+				url: '/social_recommendation/reset_plus/',
+				type: 'GET',
+				dataType:'json',
+				contentType: "application/json",
+				data:{genres:JSON.stringify(tojson),rated:1,type:'music',id:id},
+				success: function(data) {
+				   console.log('success')
+				},
+				failure: function(data) {
+					console.log('Got an error dude');
+				}
+			});
+		}
+		else{
+			$(this).siblings().eq(1).html("-1");
+			$(this).css({"color":"#3A579A","border": "1px solid #3A579A"});
+			$(this).siblings().eq(0).css({"color": "#E7E7ED","border-color": "#E7E7ED"});
+			$.ajax({
+				url: '/social_recommendation/minus_rated/',
+				type: 'GET',
+				dataType:'json',
+				contentType: "application/json",
+				data:{genres:JSON.stringify(tojson),rated:1,type:'music',id:id},
+				success: function(data) {
+				   console.log('success')
+				},
+				failure: function(data) {
+					console.log('Got an error dude');
+				}
+			});
+		}
+	});
+});
+</script>
+</head>
+<body bgcolor="#E5E5E5">
+
+<div id="app_box">
+	<div id="navi">
+		<div class="time">
+			<img class="clock" src="{{ STATIC_URL }}/lists/images/clock.jpg"><b>Time filter</b><img class="arrow" src="{{ STATIC_URL }}/lists/images/arrow.jpg">
+		</div>
+		<div class="time_options">
+			<div id="time" value="{{time}}"></div>
+			<div id="day" class="t_opt">
+				<a href="{%url 'display_music'%}">Last 2 Days</a>
+			</div>
+			<div id="week" class="t_opt">
+				<a href="{%url 'display_music_week'%}">Last Week</a>
+			</div>
+			<div id="month" class="t_opt">
+				<a href="{%url 'display_music_2'%}">Last 2 Weeks</a>
+			</div>
+		</div>
+		<a href="{%url 'display_music'%}"><div class="navibuttons">Music</div></a>
+		<a href="{%url 'display_movies'%}"><div class="navibuttons">Movies</div></a>
+		<a href="{%url 'display_index'%}"><div class="navibuttons">Back</div></a>
+	</div>
+	<div class="content">
+		{%for mu_item in music%}
+			<div class="list_item">
+				<div class="user_info">
+					<div class="fb_image"><a href="http://www.facebook.com/{{mu_item.f_id}}" target="_blank"><img class="profile" src="{{mu_item.picture}}"/></a></div>
+					<a href="http://www.facebook.com/{{mu_item.f_id}}" target="_blank"><font face="lucida" color="#3A579A"><b>{{mu_item.name}}</b></font></a>
+					<div class="popup"><a href="http://www.facebook.com/{{mu_item.post_id}}" target="_blank"><img class="popup" src="{{ STATIC_URL }}/lists/images/popup1.jpg"></a></div>
+					<div class="genres" style="display:none">
+					{%for genre in mu_item.genres%}
+						<span>{{genre}}</span>
+					{%endfor%}
+						<span>{{mu_item.post_id}}</span>
+					</div>
+					<div class="date">{{mu_item.created}}</div>
+				</div>
+				<div class="video_area">
+					<a  href="{{mu_item.link}}" target="_blank">
+						<div class="video_info">
+							<div class="yt_title">{{mu_item.title}}</div>
+							<div class="yt_about">{{mu_item.description}}</div>
+							<div class="yt_stamp">YOUTUBE</div>
+						</div>
+					</a>
+					<div class="yt_player">
+						<iframe class="youtube-player" type="text/html" width="100%" height="100%"
+						src="{{mu_item.embed}}" allowfullscreen frameborder="0">
+						</iframe>
+					</div>
+				</div>
+				<div class="rate">
+						{%if mu_item.rated == 1%}
+						<div class="plus_button" style="color:#3A579A;border: 1px solid #3A579A">I want to see MORE like this.</div>
+						<div class="minus_button">I want to see LESS like this.</div>
+						<span class="rated">{{mu_item.rated}}</span>
+					{%elif mu_item.rated == -1%}
+						<div class="plus_button">I want to see MORE like this.</div>
+						<div class="minus_button" style="color:#3A579A;border: 1px solid #3A579A">I want to see LESS like this.</div>
+						<span class="rated">{{mu_item.rated}}</span>
+					{%else%}
+						<div class="plus_button">I want to see MORE like this.</div>
+						<div class="minus_button">I want to see LESS like this.</div>
+						<span class="rated">{{mu_item.rated}}</span>
+					{%endif%}
+				</div>
+			</div>
+		{%endfor%}
+	</div>
+</div>
+</body>
+</html>
